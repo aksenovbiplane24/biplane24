@@ -39,6 +39,7 @@ export class AppController {
   }
 
   @UseInterceptors(UserInterceptor)
+  @UseGuards(new TokenGuard())
   @Get('authorizate')
   async auth(@Res({ passthrough: true }) res: Response, @Req() request: Request) {
     const result = await this._appService.authorizate(request.cookies['token'])
@@ -50,6 +51,7 @@ export class AppController {
   }
 
   @Post('create-mark')
+  @UseGuards(new TokenGuard())
   async createMark(@Body() dto: CreatingMarkDto,  @Res() res: Response, @Req() request: Request) {
     const result = await this._appService.createMark(dto, request.cookies['token'])
     if (result.isLeft()) {
@@ -60,6 +62,7 @@ export class AppController {
   }
 
   @UseInterceptors(MarkInterceptor)
+  @UseGuards(new TokenGuard())
   @Get()
   async getAMark(@Res({ passthrough: true }) res: Response, @Req() request: Request) {
     const result = await this._appService.getMark(request.id, request.cookies['token'])
